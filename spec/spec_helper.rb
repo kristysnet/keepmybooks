@@ -55,6 +55,7 @@ RSpec.configure do |config|
   #Include FactoryGirl helper methods
   config.include FactoryGirl::Syntax::Methods
   #config.include Sorcery::TestHelpers::Rails
+  I18n.enforce_available_locales = false
 
 
   config.before do
