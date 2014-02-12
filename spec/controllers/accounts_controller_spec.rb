@@ -57,4 +57,53 @@ describe AccountsController do
     end
   end
 
+  describe '#edit' do
+    let(:account) { FactoryGirl.create(:account) }
+    before do
+      get :edit, id: account.id
+    end
+    it { should respond_with :success }
+    it 'responds with an existing account' do
+      expect(assigns(:account)).to eq(account)
+    end
+  end
+
+  describe '#update' do
+    let(:account) { FactoryGirl.create(:account) }
+    context 'successfully updates account' do
+      it 'grabs the correct account' do
+        put :update, id: account.id, account: FactoryGirl.attributes_for(:account)
+        expect(assigns(:account)).to eq(account)
+      end
+      it 'redirects to the show page for new account' do
+        put :update, id: account.id, account: FactoryGirl.attributes_for(:account)
+        expect(response).to redirect_to account_path(account)
+      end
+      it 'updates the correct fields for an account' do
+        changed_attributes = FactoryGirl.attributes_for(:account)
+        put :update, id: account.id, account: changed_attributes
+        expect(account.reload.name).to eq(changed_attributes[:name])
+      end
+      it 'gives a success message' do
+        put :update, id: account.id, account: FactoryGirl.attributes_for(:account)
+        expect(flash[:success]).to eq('Account was successfully updated.')
+      end
+    end
+    context 'cannot update account' do
+      before do
+        put :update, id: account.id, account: FactoryGirl.attributes_for(:invalid_account)
+      end
+      it 'does not save the new account' do
+        expect(assigns(:account)).to eq(account)
+      end
+      it 'renders the edit template' do
+        expect(response).to render_template :edit
+      end
+      it 'displays the errors with creating the account' do
+        expect(flash[:error]).to eq('Unable to update account.')
+        expect(flash[:errors]).to eq({:name=>["can't be blank"]})
+      end
+    end
+  end
+
 end

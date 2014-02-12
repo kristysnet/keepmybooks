@@ -20,6 +20,22 @@ class AccountsController < ApplicationController
     end
   end
 
+  def edit
+    @account = Account.find(params[:id])
+  end
+
+  def update
+    @account = Account.find(params[:id])
+    if @account.update_attributes(account_params)
+      flash[:success] = 'Account was successfully updated.'
+      redirect_to account_path(@account)
+    else
+      flash.now[:error] = 'Unable to update account.'
+      flash.now[:errors] = @account.errors.messages
+      render action: :edit
+    end
+  end
+
   private
   def account_params
     params.require(:account).permit(:name)
