@@ -1,0 +1,6 @@
+%table#accounts
+  - @accounts.each do |account|
+    %tr
+      %td= account.name
+      %td= link_to 'show', account_path(account)
+      %td= link_to 'edit', edit_account_path(account)

@@ -1,5 +1,5 @@
 class Account < ActiveRecord::Base
-  self.table_name = :accounts
 
+  validates :name, presence: true, uniqueness: true
 
 end
