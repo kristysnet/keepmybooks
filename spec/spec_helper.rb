@@ -57,21 +57,6 @@ RSpec.configure do |config|
   #config.include Sorcery::TestHelpers::Rails
   I18n.enforce_available_locales = false
 
-
-  config.before do
-  end
-
-  config.before(:all) do
-  end
-
-  config.after(:all) do
-  end
-
-  config.before do
-  end
-
-  config.after do
-  end
 end
 
 def ajax_html_doc
