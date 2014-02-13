@@ -1,3 +1,7 @@
 class Category < ActiveRecord::Base
-  self.table_name = :categories
+
+  validates :name, presence: true, uniqueness: true
+  belongs_to :parent,   class_name: '::Category'
+  has_many   :children, class_name: '::Category', foreign_key: 'parent_id', primary_key: 'category_id'
+
 end
