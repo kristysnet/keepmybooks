@@ -19,4 +19,69 @@ describe CategoriesController do
       expect(assigns(:category)).to eq(category)
     end
   end
+
+  describe '#edit' do
+    let(:category) { FactoryGirl.create(:category) }
+    before do
+      get :edit, id: category.id
+    end
+    it { should respond_with :success }
+    it 'responds with an existing category' do
+      expect(assigns(:category)).to eq(category)
+    end
+  end
+
+  describe '#update' do
+    let(:category) { FactoryGirl.create(:category) }
+    context 'successfully updates category' do
+      it 'grabs the correct category' do
+        put :update, id: category.id, category: FactoryGirl.attributes_for(:category)
+        expect(assigns(:category)).to eq(category)
+      end
+      it 'redirects to the show page for new category' do
+        put :update, id: category.id, category: FactoryGirl.attributes_for(:category)
+        expect(response).to redirect_to category_path(category)
+      end
+      it 'updates the correct fields for an category' do
+        changed_attributes = FactoryGirl.attributes_for(:category)
+        put :update, id: category.id, category: changed_attributes
+        expect(category.reload.name).to eq(changed_attributes[:name])
+      end
+      it 'gives a success message' do
+        put :update, id: category.id, category: FactoryGirl.attributes_for(:category)
+        expect(flash[:success]).to eq('Category was successfully updated.')
+      end
+    end
+    context 'cannot update category' do
+      before do
+        put :update, id: category.id, category: FactoryGirl.attributes_for(:invalid_category)
+      end
+      it 'does not save the new category' do
+        expect(assigns(:category)).to eq(category)
+      end
+      it 'renders the edit template' do
+        expect(response).to render_template :edit
+      end
+      it 'displays the errors with creating the account' do
+        expect(flash[:error]).to eq('Unable to update category.')
+        expect(flash[:errors]).to eq({:name=>["can't be blank"]})
+      end
+    end
+  end
+
+  describe '#destroy' do
+    before :each do
+      @category = FactoryGirl.create(:category)
+    end
+    it 'deletes the category' do
+      expect {
+        delete :destroy, id: @category.id
+      }.to change(Category, :count).by(-1)
+    end
+    it 'redirects to the index page' do
+      delete :destroy, id: @category.id
+      expect(response).to redirect_to categories_path()
+    end
+  end
+
 end
