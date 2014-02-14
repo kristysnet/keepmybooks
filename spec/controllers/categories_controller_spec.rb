@@ -11,4 +11,12 @@ describe CategoriesController do
       end
     end
   end
+
+  describe '#show' do
+    let(:category) { FactoryGirl.create(:category) }
+    it 'shows all the subcategories for a category' do
+      get :show, id: category.id
+      expect(assigns(:category)).to eq(category)
+    end
+  end
 end

@@ -1,0 +1,8 @@
+%h1= @category.name
+
+%table#children
+  - @category.children.each do |child|
+    %tr
+      %td= child.name
+      %td= link_to 'show', category_path(child)
+      %td= link_to 'edit', edit_category_path(child)
