@@ -8,6 +8,23 @@ class CategoriesController < ApplicationController
     @category = Category.find(params[:id])
   end
 
+  def new
+    @category = Category.new
+    @category.update(parent_id: params[:parent_id]) if params[:parent_id].present?
+  end
+
+  def create
+    @category = Category.new(category_params)
+    if @category.save
+      flash[:success] = 'Category was successfully created.'
+      redirect_to category_path(@category)
+    else
+      flash.now[:error] = 'Unable to create category.'
+      flash.now[:errors] = @category.errors.messages
+      render action: 'new'
+    end
+  end
+
   def edit
     @category = Category.find(params[:id])
   end
@@ -33,7 +50,7 @@ class CategoriesController < ApplicationController
   private
 
   def category_params
-    params.require(:category).permit(:name)
+    params.require(:category).permit(:name, :parent_id)
   end
 
 end
