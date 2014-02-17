@@ -18,4 +18,8 @@ describe 'categories/index.haml' do
     end
   end
 
+  it 'has a link to create a new category' do
+    expect(rendered).to have_link('new', href: new_category_path())
+  end
+
 end

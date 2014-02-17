@@ -1,5 +1,5 @@
 %h1= @category.name
-
+%div= link_to 'new', new_category_path(@category.id)
 %table#children
   - @category.children.each do |child|
     %tr

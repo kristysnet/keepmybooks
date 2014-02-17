@@ -23,4 +23,8 @@ describe 'categories/show.haml' do
     end
   end
 
+  it 'has a link to create child category' do
+    expect(rendered).to have_link('new', href: new_category_path(category.id))
+  end
+
 end

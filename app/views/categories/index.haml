@@ -1,3 +1,5 @@
+%h1 Categories
+%div= link_to 'new', new_category_path()
 %table#categories
   - @categories.each do |category|
     %tr

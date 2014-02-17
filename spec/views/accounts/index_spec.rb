@@ -18,4 +18,8 @@ describe 'accounts/index.haml' do
     end
   end
 
+  it 'has a link to create a new account' do
+    expect(rendered).to have_link('new', href: new_account_path())
+  end
+
 end

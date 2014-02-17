@@ -1,3 +1,5 @@
+%h1 Accounts
+%div= link_to 'new', new_account_path()
 %table#accounts
   - @accounts.each do |account|
     %tr
