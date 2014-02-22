@@ -3,13 +3,13 @@ require 'spec_helper'
 describe AccountsController do
 
   describe '#index' do
-    let!(:account) { FactoryGirl.create(:account) }
+    let!(:accounts) { (1..5).map{ |i| create(:account) } }
     before do
       get :index
     end
     it { should respond_with :success }
     it 'responds with all the accounts' do
-      expect(assigns(:accounts)).to include(account)
+      expect(assigns(:accounts)).to match_array(accounts)
     end
   end
 
@@ -26,31 +26,31 @@ describe AccountsController do
   describe '#create' do
     context 'successfully creates account' do
       it 'redirects to the show page for new account' do
-        post :create, account: FactoryGirl.attributes_for(:account)
+        post :create, account: attributes_for(:account)
         expect(response).to redirect_to account_path(Account.last)
       end
       it 'creates a new account' do
         expect {
-          post :create, account: FactoryGirl.attributes_for(:account)
+          post :create, account: attributes_for(:account)
         }.to change(Account, :count).by(1)
       end
       it 'gives a success message' do
-        post :create, account: FactoryGirl.attributes_for(:account)
+        post :create, account: attributes_for(:account)
         expect(flash[:success]).to eq('Account was successfully created.')
       end
     end
     context 'cannot create account' do
       it 'does not save the new account' do
         expect {
-          post :create, account: FactoryGirl.attributes_for(:invalid_account)
+          post :create, account: attributes_for(:invalid_account)
         }.to_not change(Account,:count)
       end
       it 'renders the new template' do
-        post :create, account: FactoryGirl.attributes_for(:invalid_account)
+        post :create, account: attributes_for(:invalid_account)
         expect(response).to render_template :new
       end
       it 'displays the errors with creating the account' do
-        post :create, account: FactoryGirl.attributes_for(:invalid_account)
+        post :create, account: attributes_for(:invalid_account)
         expect(flash[:error]).to eq('Unable to create account.')
         expect(flash[:errors]).to eq({:name=>["can't be blank"]})
       end
@@ -58,7 +58,7 @@ describe AccountsController do
   end
 
   describe '#edit' do
-    let(:account) { FactoryGirl.create(:account) }
+    let(:account) { create(:account) }
     before do
       get :edit, id: account.id
     end
@@ -69,29 +69,29 @@ describe AccountsController do
   end
 
   describe '#update' do
-    let(:account) { FactoryGirl.create(:account) }
+    let(:account) { create(:account) }
     context 'successfully updates account' do
       it 'grabs the correct account' do
-        put :update, id: account.id, account: FactoryGirl.attributes_for(:account)
+        put :update, id: account.id, account: attributes_for(:account)
         expect(assigns(:account)).to eq(account)
       end
       it 'redirects to the show page for new account' do
-        put :update, id: account.id, account: FactoryGirl.attributes_for(:account)
+        put :update, id: account.id, account: attributes_for(:account)
         expect(response).to redirect_to account_path(account)
       end
       it 'updates the correct fields for an account' do
-        changed_attributes = FactoryGirl.attributes_for(:account)
+        changed_attributes = attributes_for(:account)
         put :update, id: account.id, account: changed_attributes
         expect(account.reload.name).to eq(changed_attributes[:name])
       end
       it 'gives a success message' do
-        put :update, id: account.id, account: FactoryGirl.attributes_for(:account)
+        put :update, id: account.id, account: attributes_for(:account)
         expect(flash[:success]).to eq('Account was successfully updated.')
       end
     end
     context 'cannot update account' do
       before do
-        put :update, id: account.id, account: FactoryGirl.attributes_for(:invalid_account)
+        put :update, id: account.id, account: attributes_for(:invalid_account)
       end
       it 'does not save the new account' do
         expect(assigns(:account)).to eq(account)
@@ -108,7 +108,7 @@ describe AccountsController do
 
   describe '#delete' do
     before :each do
-      @account = FactoryGirl.create(:account)
+      @account = create(:account)
     end
     it 'deletes the account' do
       expect {
