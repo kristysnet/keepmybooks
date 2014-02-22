@@ -1,6 +1,8 @@
 Keepmybooks::Application.routes.draw do
 
-  resources :accounts
+  resources :accounts do
+    resources :transactions
+  end
   resources :categories
 
 end

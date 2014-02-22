@@ -17,4 +17,16 @@ class Transaction < ActiveRecord::Base
     end
   end
 
+  def is_deposit?
+    self.deposit
+  end
+
+  def amount_value
+    if is_deposit?
+      self.amount
+    else
+      0-self.amount
+    end
+  end
+
 end

@@ -20,4 +20,29 @@ describe Transaction do
     transaction.save
     expect(transaction.errors.messages[:transaction_date]).to be(nil)
   end
+
+  describe '#is_deposit' do
+    let(:transaction) { create(:transaction) }
+    it 'returns true if is a deposit' do
+      transaction.update_attributes(deposit: true)
+      expect(transaction.is_deposit?).to be(true)
+    end
+    it 'returns false if it is not a deposit' do
+      transaction.update_attributes(deposit: false)
+      expect(transaction.is_deposit?).to be(false)
+    end
+  end
+
+  describe '#amount_value' do
+    let(:transaction) { create(:transaction) }
+    it 'returns a positive number if deposit' do
+      transaction.update_attributes(deposit: true)
+      expect(transaction.amount_value).to eq(transaction.amount)
+    end
+    it 'returns a negative number if not deposit' do
+      transaction.update_attributes(deposit: false)
+      expect(transaction.amount_value).to eq(0-transaction.amount)
+    end
+
+  end
 end
